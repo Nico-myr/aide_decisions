@@ -4,5 +4,4 @@ numpy
 sktime
 plotly.express
 plotly
-binance
-binance.client
+python-binance
