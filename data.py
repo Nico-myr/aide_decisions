@@ -53,7 +53,10 @@ x_BNB=pd.Series(open_BNB['Open'])
 
 # API BInance OHLC avec volume historique 1 an 
 
-client = Client() #connection API public Binance 
+#probleme lier au serveur changement url 
+
+url = https://data.binance.com/api/v3 
+client = Client(url) #connection API public Binance 
 
 
 symbols = ['BTCUSDT', 'ETHUSDT', 'BNBUSDT']
