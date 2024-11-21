@@ -5,3 +5,5 @@ sktime
 plotly.express
 plotly
 python-binance
+streamlit-echarts
+
