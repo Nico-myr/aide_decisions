@@ -55,7 +55,7 @@ x_BNB=pd.Series(open_BNB['Open'])
 
 #probleme lier au serveur changement url 
 
-url = https://data.binance.com/api/v3 
+url = "https://data.binance.com/api/v3"
 client = Client(url) #connection API public Binance 
 
 
