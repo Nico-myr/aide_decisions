@@ -3,10 +3,11 @@ import requests
 import pandas as pd
 import numpy as np
 import yfinance as yf
+import pandas as pd
 
 
 
-# Données OHLC
+# Données OHLC (Open, Hight, Low, Close ), lien différents pour chaque symbols
 
 #OHLC BTC
 url_BTC = "https://api.coingecko.com/api/v3/coins/bitcoin/ohlc?vs_currency=usd&days=1"
@@ -27,7 +28,7 @@ headers = {"accept": "application/json"}
 response_BNB = requests.get(url_BNB, headers=headers)
 BNB_json=response_BNB.json()
 
-#nettoyage
+#Préparation de données
 
 #BTC
 df_OHLC_BTC= pd.DataFrame(BTC_json, columns=["Timestamp", "Open", "High", "Low", "Close"])
@@ -51,28 +52,9 @@ open_BNB = df_OHLC_BNB.drop(['High','Low','Close'], axis=1)
 open_BNB.set_index("Timestamp", inplace=True)
 x_BNB=pd.Series(open_BNB['Open'])
 
-# API BInance OHLC avec volume historique 1 an 
-
-#probleme lier au serveur changement url 
-
- 
 
 
-
-#classement market cap 
-
-#url = "https://api.coingecko.com/api/v3/coins/markets"
-#params = {
-    #"vs_currency": "usd",  
-    #"per_page": 10,  # nbr de cryptos par page classé par rank market cap
-    #"page": 1,  # nbr de page  
-#}
-
-#response = requests.get(url, params=params)
-#response.raise_for_status()
-#classement = response.json()
-
-
+#API YFINANCE pour historiquess prix et volume commençant le 1 janvier 2023
 
 def get_ohlc_data_yfinance(symbol, interval, start_date="2023-01-01"):
     
@@ -86,12 +68,15 @@ data_BTC = {interval: get_ohlc_data_yfinance(symbol='BTC-USD', interval=interval
 data_ETH = {interval: get_ohlc_data_yfinance(symbol='ETH-USD', interval=interval) for interval in intervals}
 data_BNB = {interval: get_ohlc_data_yfinance(symbol='BNB-USD', interval=interval) for interval in intervals}
 
+#préparation des données pour l'historiques des prix et du volume
+
+#BTC
 df_btc_lt_W=pd.DataFrame(data_BTC['1wk'])
 df_btc_lt_M=pd.DataFrame(data_BTC['1mo'])
-
+#ETH
 df_eth_lt_W=pd.DataFrame(data_ETH['1wk'])
 df_eth_lt_M=pd.DataFrame(data_ETH['1mo'])
-
+#BNB
 df_bnb_lt_W=pd.DataFrame(data_BNB['1wk'])
 df_bnb_lt_M=pd.DataFrame(data_BNB['1mo'])
 
