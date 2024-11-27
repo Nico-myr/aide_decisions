@@ -4,7 +4,7 @@ import numpy as np
 import  plotly.express  as  px
 import plotly.graph_objects as go
 
-from data import data_monthly, data_weekly#, classement
+from data import df_btc_lt_W,df_btc_lt_M,df_eth_lt_W,df_eth_lt_M,df_bnb_lt_W,df_bnb_lt_M#, classement
 
 #classement 
 
@@ -22,11 +22,11 @@ def graph_OHLC(df, interval, symbol):
     
     #bougies OHLC
     fig.add_trace(go.Candlestick(
-        x=df['timestamp'],
-        open=df['open'],
-        high=df['high'],
-        low=df['low'],
-        close=df['close'],
+        x=df.index,
+        open=df['Open'][symbol],
+        high=df['High'][symbol],
+        low=df['Low'][symbol],
+        close=df['Close'][symbol],
         name="OHLC",
         increasing_line_color='green',
         decreasing_line_color= 'red',
@@ -45,47 +45,53 @@ def graph_OHLC(df, interval, symbol):
 
 #historique BTC
 
-hist_BTC_sem=graph_OHLC(data_weekly['BTCUSDT'],"hebdomadaire", " du BTC")
-hist_BTC_m=graph_OHLC(data_monthly['BTCUSDT']," mensuel ", " du BTC")
+hist_BTC_sem=graph_OHLC(df_btc_lt_W,"hebdomadaire", 'BTC-USD')
+hist_BTC_m=graph_OHLC(df_btc_lt_M," mensuel ", 'BTC-USD')
 
 #ETH
 
-hist_ETH_sem=graph_OHLC(data_weekly['ETHUSDT'],"hebdomadaire", " de l'ETH")
-hist_ETH_m=graph_OHLC(data_monthly['ETHUSDT']," mensuel ", " de l'ETH")
+hist_ETH_sem=graph_OHLC(df_eth_lt_W,"hebdomadaire", 'ETH-USD')
+hist_ETH_m=graph_OHLC(df_eth_lt_M," mensuel ", 'ETH-USD')
 
 #BNB
 
-hist_BNB_sem=graph_OHLC(data_weekly['BNBUSDT'],"hebdomadaire", " du BNB")
-hist_BNB_m=graph_OHLC(data_monthly['BNBUSDT']," mensuel ", " du BNB")
+hist_BNB_sem=graph_OHLC(df_bnb_lt_W,"hebdomadaire", 'BNB-USD')
+hist_BNB_m=graph_OHLC(df_bnb_lt_M," mensuel ", 'BNB-USD')
 
 
 # historique des volumes 
 
-def graph_hist_vol(df, interval, symbol,dtick_val):
-
-    df['volume']=pd.to_numeric(df['volume'], errors='coerce')
-    df['volume_conv']=(df['volume']/10000).round() # nouvelle col pour éviter les probleme de perfs
+def graph_hist_vol(df, interval, symbol, dtick_val=0):
+    
+    #convertion d'unité
+    df['Volume'] = pd.to_numeric(df['Volume'][symbol], errors='coerce')
+    df['Volume_conv'] = (df['Volume'][symbol] / 1000).round()
+    
+   
     fig = go.Figure()
 
     # Ajouter un histogramme pour le volume
     fig.add_trace(go.Bar(
-        x=df['timestamp'], 
-        y=df['volume_conv'],
+        x=df.index,  # Vérifiez que 'Date' existe dans df
+        y=df['Volume_conv'],  # Utilisez la nouvelle colonne
         name='Volume',
-        marker=dict(color='rgb(0, 0, 255, 255)')
+        marker=dict(color='rgb(128, 0, 128)')
+        
     ))
     
-    # Mise en forme du graphique
+    
     fig.update_layout(
         xaxis_rangeslider_visible=False,
         template="plotly_dark",
-        title=f"Historique " + interval + "des volumes " + symbol,
+        title="Historique " +interval+ "des volumes " +symbol,
         xaxis_title="Dates",
-        yaxis_title="Volume (en dizaine de milliers)",
+        yaxis_title="Volume (en milliard )",
         yaxis=dict(
-            tickmode="linear",         
-            dtick=dtick_val)
+            tickmode="linear",
+            dtick=dtick_val
+        )
     )
+    
     return fig
     
     
@@ -93,20 +99,21 @@ def graph_hist_vol(df, interval, symbol,dtick_val):
 
 #BTC
 
-vol_BTC_M=graph_hist_vol(data_monthly['BTCUSDT'], 'mensuel ', 'BTC',50)
-vol_BTC_W=graph_hist_vol(data_weekly['BTCUSDT'], 'hebdomadaire', 'BTC',10)
+vol_BTC_M=graph_hist_vol(df_btc_lt_M, ' mensuel ', 'BTC-USD',100000000)
+vol_BTC_W=graph_hist_vol(df_btc_lt_W, ' hebdomadaire ', 'BTC-USD',65000000)
 
 #ETH
 
 
-vol_ETH_M=graph_hist_vol(data_monthly['ETHUSDT'], 'mensuel ', 'ETH',250)
-vol_ETH_W=graph_hist_vol(data_weekly['ETHUSDT'], 'hebdomadaire ', 'ETH',100)
+vol_ETH_M=graph_hist_vol(df_eth_lt_M, ' mensuel ', 'ETH-USD',100000000)
+vol_ETH_W=graph_hist_vol(df_eth_lt_W, ' hebdomadaire ', 'ETH-USD',65000000)
 
 #BNB
 
 
-vol_BNB_M=graph_hist_vol(data_monthly['BNBUSDT'], 'mensuel ', 'BNB',1000)
-vol_BNB_W=graph_hist_vol(data_weekly['BNBUSDT'], 'hebdomadaire ', 'BNB',100)
+vol_BNB_M=graph_hist_vol(df_bnb_lt_M, ' mensuel ', 'BNB-USD',5000000)
+vol_BNB_W=graph_hist_vol(df_bnb_lt_W, ' hebdomadaire ', 'BNB-USD',3500000)
+
 
 
 
