@@ -2,7 +2,7 @@
 import requests
 import pandas as pd
 import numpy as np
-from binance.client import Client
+import yfinance as yf
 
 
 
@@ -55,31 +55,9 @@ x_BNB=pd.Series(open_BNB['Open'])
 
 #probleme lier au serveur changement url 
 
-url = "https://api4.binance.com"
-client = Client(url) #connection API public Binance 
+ 
 
 
-symbols = ['BTCUSDT', 'ETHUSDT', 'BNBUSDT']
-start_date = "1 year ago UTC"  # Période de 1 an
-
-# Fonction pour obtenir des données OHLC
-def get_ohlc_data(symbol, interval):
-    klines = client.get_historical_klines(symbol, interval, start_date)
-    # Transformation des données en DataFrame
-    data = pd.DataFrame(klines, columns=[
-        'timestamp', 'open', 'high', 'low', 'close', 'volume', 
-        'close_time', 'quote_asset_volume', 'number_of_trades', 
-        'taker_buy_base_asset_volume', 'taker_buy_quote_asset_volume', 'ignore'
-    ])
-    data['timestamp'] = pd.to_datetime(data['timestamp'], unit='ms') 
-
-    return data[['timestamp', 'open', 'high', 'low', 'close', 'volume']]
-    
-    
-
-data_monthly = {symbol: get_ohlc_data(symbol, Client.KLINE_INTERVAL_1MONTH) for symbol in symbols}
-data_weekly = {symbol: get_ohlc_data(symbol, Client.KLINE_INTERVAL_1WEEK) for symbol in symbols}
-data_daily= {symbol: get_ohlc_data(symbol, Client.KLINE_INTERVAL_3DAY ) for symbol in symbols}
 
 #classement market cap 
 
