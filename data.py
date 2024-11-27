@@ -95,3 +95,26 @@ data_daily= {symbol: get_ohlc_data(symbol, Client.KLINE_INTERVAL_3DAY ) for symb
 #classement = response.json()
 
 
+
+def get_ohlc_data_yfinance(symbol, interval, start_date="2023-01-01"):
+    
+    data = yf.download(tickers=symbol, interval=interval, start=start_date)
+     
+    return data
+
+intervals = ["1mo", "1wk"]
+
+data_BTC = {interval: get_ohlc_data_yfinance(symbol='BTC-USD', interval=interval) for interval in intervals}
+data_ETH = {interval: get_ohlc_data_yfinance(symbol='ETH-USD', interval=interval) for interval in intervals}
+data_BNB = {interval: get_ohlc_data_yfinance(symbol='BNB-USD', interval=interval) for interval in intervals}
+
+df_btc_lt_W=pd.DataFrame(data_BTC['1wk'])
+df_btc_lt_M=pd.DataFrame(data_BTC['1mo'])
+
+df_eth_lt_W=pd.DataFrame(data_ETH['1wk'])
+df_eth_lt_M=pd.DataFrame(data_ETH['1mo'])
+
+df_bnb_lt_W=pd.DataFrame(data_BNB['1wk'])
+df_bnb_lt_M=pd.DataFrame(data_BNB['1mo'])
+
+
