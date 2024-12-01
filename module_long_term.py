@@ -38,18 +38,18 @@ def graph_OHLC(df, interval, symbol):
 
 # BTC
 
-hist_BTC_sem=graph_OHLC(df_btc_lt_W,"hebdomadaire", 'BTC-USD')
-hist_BTC_m=graph_OHLC(df_btc_lt_M," mensuel ", 'BTC-USD')
+hist_BTC_sem=graph_OHLC(df_btc_lt_W,"hebdomadaire", ' BTC-USD')
+hist_BTC_m=graph_OHLC(df_btc_lt_M," mensuel ", ' BTC-USD')
 
 # ETH
 
-hist_ETH_sem=graph_OHLC(df_eth_lt_W,"hebdomadaire", 'ETH-USD')
-hist_ETH_m=graph_OHLC(df_eth_lt_M," mensuel ", 'ETH-USD')
+hist_ETH_sem=graph_OHLC(df_eth_lt_W,"hebdomadaire", ' ETH-USD')
+hist_ETH_m=graph_OHLC(df_eth_lt_M," mensuel ", ' ETH-USD')
 
 # BNB
 
-hist_BNB_sem=graph_OHLC(df_bnb_lt_W,"hebdomadaire", 'BNB-USD')
-hist_BNB_m=graph_OHLC(df_bnb_lt_M," mensuel ", 'BNB-USD')
+hist_BNB_sem=graph_OHLC(df_bnb_lt_W,"hebdomadaire", ' BNB-USD')
+hist_BNB_m=graph_OHLC(df_bnb_lt_M," mensuel ", ' BNB-USD')
 
 
 # fonction graphique historique des volumes 
