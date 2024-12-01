@@ -27,7 +27,7 @@ def graph_OHLC(df, interval, symbol):
     fig.update_layout(
         xaxis_rangeslider_visible=False,
         template="plotly_dark",
-        title="Historique " + interval + " des prix" + symbol ,
+        title="Historique " + interval + " des prix " + symbol ,
         xaxis_title="Dates",
         yaxis_title="Prix en USDT"
         )
