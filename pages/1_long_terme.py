@@ -3,12 +3,7 @@ from module_long_term import  hist_BTC_m, hist_BTC_sem, hist_ETH_m, hist_ETH_sem
 
 
 col2, col3 = st.columns(2)
-
-#with col1 :
-   # st.header("Variations des prix 24H")
-   # st.dataframe(df_classement, hide_index=True)
-
-    
+   
 
 with col2:
     st.header("Cours à long terme")
