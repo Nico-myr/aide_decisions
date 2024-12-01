@@ -1,21 +1,21 @@
 #importation package 
-import  plotly.express  as  px
-import plotly.graph_objects as go
 
+import plotly.graph_objects as go
 import pandas as pd
 import numpy as np
 
 from data import open_BTC,open_ETH,open_BNB,df_OHLC_BTC,df_OHLC_BNB,df_OHLC_ETH
 
-#Graphique bougie et BB
-
-
+# Fonction calcul indicateur bandes de bollinger
 
 
 def calcul_BB(prix, valeurs_passees=10, ecart=5):
-    #tableau 1 dim pour calcul
-    prix = np.asarray(prix).flatten()
+    
+    prix = np.asarray(prix).flatten() # problème de dimension pour le calcul 
     prix = pd.Series(prix)
+
+    # appliquer le calcul à une partie des valeurs et le faire décaler 
+    # pour la moyenne et l'écart type
 
     rolling_mean = prix.rolling(valeurs_passees, min_periods=1).mean()
     rolling_std = prix.rolling(valeurs_passees, min_periods=1).std()
@@ -27,16 +27,13 @@ def calcul_BB(prix, valeurs_passees=10, ecart=5):
     return bande_supp.values, bande_inf.values
 
 
-# Exemple d'appel à la fonction avec open_BTC
+# Application fonction BB et séparation des bandes pour afficher les lignes(graphiques)
 B_supp_BTC, B_inf_BTC = calcul_BB(open_BTC)
 B_supp_ETH, B_inf_ETH = calcul_BB(open_ETH)
 B_supp_BNB, B_inf_BNB = calcul_BB(open_BNB)
 
 
-
-
-
-
+# Fonction graphique Open High Low Close avec BB
 
 def graph_BB(df, bande_supp, bande_inf, nom):
 
@@ -83,6 +80,7 @@ def graph_BB(df, bande_supp, bande_inf, nom):
     
     return fig
 
+# Application graphique bandes Bollinger
 graph_BB_BTC=graph_BB(df_OHLC_BTC,B_supp_BTC, B_inf_BTC,nom = "du Bitcoin")
 graph_BB_ETH=graph_BB(df_OHLC_ETH,B_supp_ETH, B_inf_ETH,nom = "d'Ethereum")
 graph_BB_BNB=graph_BB(df_OHLC_BNB,B_supp_BNB, B_inf_BNB, nom= "du Binance Coin")
@@ -90,7 +88,7 @@ graph_BB_BNB=graph_BB(df_OHLC_BNB,B_supp_BNB, B_inf_BNB, nom= "du Binance Coin")
 
 
 
-#RSI
+# Fonction calcul RSI
 
 def RSI_indica (prix, period=14):
     delta = prix.diff()
@@ -109,6 +107,8 @@ BTC_rsi, BTC_ema_up, BTC_ema_down = RSI_indica(open_BTC['Open'])
 ETH_rsi, ETH_ema_up, ETH_ema_down = RSI_indica(open_ETH['Open'])
 BNB_rsi, BNB_ema_up, BNB_ema_down = RSI_indica(open_BNB['Open'])
 
+# Fonction graphique RSI
+
 def graph_RSI (rsi, ema_up, ema_down):
     fig = go.Figure()
     fig.add_trace(go.Scatter(x=rsi.index, y=rsi, mode='lines', name='RSI', line=dict(color='blue')))
@@ -123,11 +123,14 @@ def graph_RSI (rsi, ema_up, ema_down):
     
     return fig
 
+# Application Graphique RSI
 graph_rsi_BTC =graph_RSI(BTC_rsi,BTC_ema_up,BTC_ema_down)
 graph_rsi_ETH =graph_RSI(ETH_rsi,ETH_ema_up,ETH_ema_down)
 graph_rsi_BNB =graph_RSI(BNB_rsi,BNB_ema_up,BNB_ema_down)
 
-# EMA 
+
+
+# Fonction graphique EMA 
 def graph_EMA(ema_up,ema_down):
     fig = go.Figure()
     fig.add_trace(go.Scatter(x=ema_up.index, y=ema_up, mode='lines', name='EMA Up', line=dict(color='green')))
@@ -143,7 +146,10 @@ def graph_EMA(ema_up,ema_down):
     
     return fig
 
+# Application graphique RSI
 graph_EMA_BTC=graph_EMA(BTC_ema_up,BTC_ema_down)
 graph_EMA_ETH=graph_EMA(ETH_ema_up,ETH_ema_down)
 graph_EMA_BNB=graph_EMA(BNB_ema_up,BNB_ema_down)
+
+
 
