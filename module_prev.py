@@ -1,114 +1,102 @@
 
 import pandas as pd
-import numpy as np
 
-#importation données 
+# Importation données 
+from data import x_BTC, x_ETH, x_BNB
 
-from data import open_BTC, x_BTC, open_ETH, x_ETH, open_BNB, x_BNB
-
-#prev
+# Fonction SKTIME
 from sktime.forecasting.model_selection import temporal_train_test_split
 from sktime.forecasting.base import ForecastingHorizon
 from sktime.forecasting.exp_smoothing import ExponentialSmoothing
 from sktime.performance_metrics.forecasting import mean_absolute_percentage_error
 from sktime.utils.plotting import plot_series
 
-#visualisation
-import  plotly.express  as  px
+# Visualisation
 import plotly.graph_objects as go
 
-import streamlit as st
 
+# Prévision BTC
 
-#Prévision BTC
-
- 
-
-#préparation ech test et horizon test
+# Préparation échantillon de  test et horizon test
 BTC_train, BTC_test = temporal_train_test_split(x_BTC,test_size= 10)
 fh_test = ForecastingHorizon(BTC_test.index, is_relative=False)
 
-#horizon prévision 
+# Horizon prévision 
 fh_dates = pd.date_range(start=x_BTC.index[-1], periods=10, freq='30min')
 fh_pred = ForecastingHorizon(fh_dates, is_relative=False)
 
-# utilisation du modele 
+# Utilisation du modèle 
 model= ExponentialSmoothing(trend="add", seasonal=None)
 model_test_BTC= model.fit(BTC_train)
 model_pred_BTC=model.fit(x_BTC) 
 
-# prévision et test 
-
+# Prévision et test 
 BTC_perf=model_test_BTC.predict(fh_test)
 BTC_pred = model_pred_BTC.predict(fh_pred)
-#mape
+
+# MAPE (test de qualité)
 mape_BTC = mean_absolute_percentage_error(BTC_test, BTC_pred)*100
 
-#fusion 
+# Création des dataframes
 df_BTC_train= pd.DataFrame(BTC_train)
 df_BTC_pred=pd.DataFrame(BTC_pred)
 BTC_fusion=pd.DataFrame(pd.concat([BTC_train, BTC_test], axis=0))
 
 
 
-
-
-
 # Prévision eth
 
-#préparation ech test et horizon test
+# Préparation échantillon de  test et horizon test
 ETH_train, ETH_test = temporal_train_test_split(x_ETH,test_size= 10)
 fh_test = ForecastingHorizon(ETH_test.index, is_relative=False)
 
-#horizon prévision 
+# Horizon prévision 
 fh_dates = pd.date_range(start=x_ETH.index[-1], periods=10, freq='30min')
 fh_pred = ForecastingHorizon(fh_dates, is_relative=False)
 
-# utilisation du modele 
+# Utilisation du modèle 
 model= ExponentialSmoothing(trend="add", seasonal=None)
 model_test_ETH= model.fit(ETH_train)
 model_pred_ETH=model.fit(x_ETH) 
 
-# prévision et test 
+# Prévision et test 
 
 ETH_perf=model_test_ETH.predict(fh_test)
 ETH_pred = model_pred_ETH.predict(fh_pred)
-#mape
+
+# MAPE (test de qualité)
 mape_ETH = mean_absolute_percentage_error(ETH_test, ETH_pred)*100
 
-#fusion
+# Création des dataframes
 df_ETH_train= pd.DataFrame(ETH_train)
 df_ETH_pred = pd.DataFrame(ETH_pred)
 ETH_fusion=pd.DataFrame(pd.concat([ETH_train, ETH_test], axis=0))
 
 
 
+# Prévision BNB
 
-
-
-#prévision BNB
-
-#préparation ech test et horizon test
+# Préparation échantillon de  test et horizon test
 BNB_train, BNB_test = temporal_train_test_split(x_BNB,test_size= 10)
 fh_test = ForecastingHorizon(BNB_test.index, is_relative=False)
 
-#horizon prévision 
+# Horizon prévision 
 fh_dates = pd.date_range(start=x_BNB.index[-1], periods=10, freq='30min')
 fh_pred = ForecastingHorizon(fh_dates, is_relative=False)
 
-# utilisation du modele 
+# Utilisation du modèle 
 model= ExponentialSmoothing(trend="add", seasonal=None)
 model_test_BNB= model.fit(BNB_train)
 model_pred_BNB=model.fit(x_BNB) 
 
-# prévision et test 
-
+# Prévision et test 
 BNB_perf=model_test_BNB.predict(fh_test)
 BNB_pred = model_pred_BNB.predict(fh_pred)
-#mape
+
+# MAPE (test de qualité)
 mape_BNB = mean_absolute_percentage_error(BNB_test, BNB_pred)*100
 
-#fusion
+# Création des dataframes
 df_BNB_train= pd.DataFrame(BNB_train)
 df_BNB_pred = pd.DataFrame(BNB_pred)
 BNB_fusion=pd.DataFrame(pd.concat([BNB_train, BNB_test], axis=0))
@@ -117,7 +105,7 @@ BNB_fusion=pd.DataFrame(pd.concat([BNB_train, BNB_test], axis=0))
 
 
 
-#graphique prévision
+# Fonction graphique prévision
 def graph_prev_2(index_fusion, valeur_y_fusion, index_pred, valeur_pred):
     # convertir 
     index_fusion = pd.Series(index_fusion).values
@@ -158,7 +146,7 @@ def graph_prev_2(index_fusion, valeur_y_fusion, index_pred, valeur_pred):
         
         frames.append(go.Frame(data=frame_data, name=str(i)))
 
-     #paramètre
+     
     fig.frames = frames
 
     fig.update_layout(
@@ -179,14 +167,14 @@ def graph_prev_2(index_fusion, valeur_y_fusion, index_pred, valeur_pred):
     )
     return fig
     
-
+ # Application fonction graphique
 graph_prev_BTC=graph_prev_2(BTC_fusion.index, BTC_fusion['Open'], df_BTC_pred.index, df_BTC_pred['Open'])
 graph_prev_ETH=graph_prev_2(ETH_fusion.index,ETH_fusion['Open'],df_ETH_pred.index,df_ETH_pred['Open'])
 graph_prev_BNB=graph_prev_2(BNB_fusion.index,BNB_fusion['Open'],df_BNB_pred.index,df_BNB_pred['Open'])
 
 
 
-#tableau conseil position
+# Tableau conseil position
 
 def prix(prevision):
     prix_entrée = round(min(prevision), 2)
@@ -217,9 +205,3 @@ df_prix_conseil = pd.DataFrame({
         "prix_sortie" : prix_conseil_BNB[2],       
     } 
 })
-
-
-
-
-#Jauge 
-
