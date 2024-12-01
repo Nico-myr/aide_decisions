@@ -81,3 +81,5 @@ df_bnb_lt_W=pd.DataFrame(data_BNB['1wk'])
 df_bnb_lt_M=pd.DataFrame(data_BNB['1mo'])
 
 
+
+
