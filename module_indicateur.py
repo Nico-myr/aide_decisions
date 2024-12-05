@@ -61,7 +61,7 @@ def graph_BB(df, bande_supp, bande_inf, nom):
         y=bande_supp,  
         mode='lines',
         name='bande supérieur Bollinger',
-        line=dict(color='red')
+        line=dict(color='green')
     ))
     
     #BB inf
@@ -70,7 +70,7 @@ def graph_BB(df, bande_supp, bande_inf, nom):
         y=bande_inf,    
         mode='lines',
         name='bande inférieure  Bollinger ',
-        line=dict(color='green')
+        line=dict(color='red')
     ))
     fig.update_layout(template="seaborn",
                       xaxis_title="Périodes",
